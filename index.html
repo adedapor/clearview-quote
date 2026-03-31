@@ -586,28 +586,33 @@ document.getElementById('qform').addEventListener('submit', function(e) {
   var result = calc(sw, lw, dr, trim);
   document.getElementById('loader').classList.add('on');
 
-  // Convert files to base64
-  function readFilesAsBase64(files) {
+  var CLOUD_NAME = 'dxtygtb6y';
+  var UPLOAD_PRESET = 'clearview_uploads';
+
+  function uploadToCloudinary(files, tag) {
     return Promise.all(Array.from(files).map(function(file) {
-      return new Promise(function(resolve) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          resolve({ name: file.name, type: file.type, data: e.target.result.split(',')[1] });
-        };
-        reader.readAsDataURL(file);
-      });
+      var fd = new FormData();
+      fd.append('file', file);
+      fd.append('upload_preset', UPLOAD_PRESET);
+      fd.append('tags', tag);
+      return fetch('https://api.cloudinary.com/v1_1/' + CLOUD_NAME + '/image/upload', {
+        method: 'POST',
+        body: fd
+      }).then(function(r) { return r.json(); }).then(function(d) { return d.secure_url; });
     }));
   }
 
   var intFiles = document.getElementById('int-photos').files;
   var extFiles = document.getElementById('ext-photos').files;
 
-  Promise.all([readFilesAsBase64(intFiles), readFilesAsBase64(extFiles)]).then(function(results) {
-    var intPhotos = results[0];
-    var extPhotos = results[1];
+  Promise.all([
+    uploadToCloudinary(intFiles, 'interior'),
+    uploadToCloudinary(extFiles, 'exterior')
+  ]).then(function(results) {
+    var intUrls = results[0];
+    var extUrls = results[1];
 
-    // Send lead data + photos to n8n
-    fetch('https://free001.app.n8n.cloud/webhook-test/f1e2146c-1c63-4fbc-881e-33e52939cb8d', {
+    fetch('https://free001.app.n8n.cloud/webhook/f1e2146c-1c63-4fbc-881e-33e52939cb8d', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -623,8 +628,8 @@ document.getElementById('qform').addEventListener('submit', function(e) {
         notes: document.getElementById('notes').value.trim(),
         estimated_price: '$' + result.total.toLocaleString(),
         submitted_at: new Date().toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
-        interior_photos: intPhotos,
-        exterior_photos: extPhotos
+        interior_photos: intUrls.join(', '),
+        exterior_photos: extUrls.join(', ')
       })
     }).catch(function(e) { console.warn('Webhook error:', e); });
   });
