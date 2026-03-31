@@ -584,28 +584,52 @@ document.getElementById('qform').addEventListener('submit', function(e) {
   err.classList.remove('show');
 
   var result = calc(sw, lw, dr, trim);
-
-  // Send lead data to n8n
-  fetch('https://free001.app.n8n.cloud/webhook/f1e2146c-1c63-4fbc-881e-33e52939cb8d', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      name: name,
-      email: email,
-      phone: phone,
-      address: loc,
-      property_type: prop.value,
-      standard_windows: sw,
-      large_windows: lw,
-      doors: dr,
-      trim: trim,
-      notes: document.getElementById('notes').value.trim(),
-      estimated_price: '$' + result.total.toLocaleString(),
-      submitted_at: new Date().toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
-    })
-  }).catch(function(err) { console.warn('Webhook error:', err); });
-
   document.getElementById('loader').classList.add('on');
+
+  // Convert files to base64
+  function readFilesAsBase64(files) {
+    return Promise.all(Array.from(files).map(function(file) {
+      return new Promise(function(resolve) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          resolve({ name: file.name, type: file.type, data: e.target.result.split(',')[1] });
+        };
+        reader.readAsDataURL(file);
+      });
+    }));
+  }
+
+  var intFiles = document.getElementById('int-photos').files;
+  var extFiles = document.getElementById('ext-photos').files;
+
+  Promise.all([readFilesAsBase64(intFiles), readFilesAsBase64(extFiles)]).then(function(results) {
+    var intPhotos = results[0];
+    var extPhotos = results[1];
+
+    // Send lead data + photos to n8n
+    fetch('https://free001.app.n8n.cloud/webhook/f1e2146c-1c63-4fbc-881e-33e52939cb8d', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: name,
+        email: email,
+        phone: phone,
+        address: loc,
+        property_type: prop.value,
+        standard_windows: sw,
+        large_windows: lw,
+        doors: dr,
+        trim: trim,
+        notes: document.getElementById('notes').value.trim(),
+        estimated_price: '$' + result.total.toLocaleString(),
+        submitted_at: new Date().toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        interior_photos: intPhotos,
+        exterior_photos: extPhotos
+      })
+    }).catch(function(e) { console.warn('Webhook error:', e); });
+  });
+
+
 
   setTimeout(function() {
     document.getElementById('loader').classList.remove('on');
