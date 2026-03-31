@@ -516,18 +516,18 @@ textarea { resize: none; height: 80px; line-height: 1.5; }
       <div class="s-text"><h4>Details submitted</h4><p>Photos and specs received.</p></div>
     </div>
     <div class="step-row">
-      <div class="s-dot now">2</div>
+      <div class="s-dot now" id="step2-dot">2</div>
       <div class="s-text"><h4>Book your measurement visit</h4><p>~30 min on-site. Fee credited toward final cost.</p></div>
     </div>
     <div class="step-row">
-      <div class="s-dot next">3</div>
+      <div class="s-dot next" id="step3-dot">3</div>
       <div class="s-text"><h4>Get your final quote</h4><p>Locked-in price after measurement.</p></div>
     </div>
   </div>
 
   <div class="cta-stack">
-    <a href="https://calendly.com/adedapor18/measurement-appointment" class="cta-a cta-green" target="_blank">📅 Book Measurement Appointment</a>
-    <a href="https://buy.stripe.com/test_eVq00l3VJ4yK90keR33F600" class="cta-a cta-dark" target="_blank">💳 Pay $50 Measurement Fee</a>
+    <a href="https://calendly.com/adedapor18/measurement-appointment" class="cta-a cta-green" target="_blank" id="calendly-btn">📅 Book Measurement Appointment</a>
+    <a href="https://buy.stripe.com/test_eVq00l3VJ4yK90keR33F600" class="cta-a cta-dark" target="_blank" id="stripe-btn">💳 Pay $50 Measurement Fee</a>
   </div>
   <p class="cta-foot">Measurement fee is credited toward your final installation cost.<br>Secure payment via Stripe.</p>
 
@@ -623,6 +623,24 @@ document.getElementById('qform').addEventListener('submit', function(e) {
     document.getElementById('result-page').style.display = 'block';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, 1600);
+});
+// Step progress on CTA clicks
+document.getElementById('calendly-btn').addEventListener('click', function() {
+  var dot = document.getElementById('step2-dot');
+  dot.textContent = '✓';
+  dot.classList.remove('now');
+  dot.classList.add('done');
+  // Activate step 3
+  var dot3 = document.getElementById('step3-dot');
+  dot3.classList.remove('next');
+  dot3.classList.add('now');
+});
+
+document.getElementById('stripe-btn').addEventListener('click', function() {
+  var dot = document.getElementById('step3-dot');
+  dot.textContent = '✓';
+  dot.classList.remove('now', 'next');
+  dot.classList.add('done');
 });
 </script>
 </body>
