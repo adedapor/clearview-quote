@@ -586,7 +586,7 @@ document.getElementById('qform').addEventListener('submit', function(e) {
   var result = calc(sw, lw, dr, trim);
 
   // Send lead data to n8n
-  fetch('https://free001.app.n8n.cloud/webhook-test/f1e2146c-1c63-4fbc-881e-33e52939cb8d', {
+  fetch('https://free001.app.n8n.cloud/webhook/f1e2146c-1c63-4fbc-881e-33e52939cb8d', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -601,7 +601,7 @@ document.getElementById('qform').addEventListener('submit', function(e) {
       trim: trim,
       notes: document.getElementById('notes').value.trim(),
       estimated_price: '$' + result.total.toLocaleString(),
-      submitted_at: new Date().toISOString()
+      submitted_at: new Date().toLocaleString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })
     })
   }).catch(function(err) { console.warn('Webhook error:', err); });
 
