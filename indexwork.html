@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Get a Quote — ClearView</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f9f7f4;
+  --white: #ffffff;
+  --ink: #141414;
+  --mid: #6b6b6b;
+  --light: #e8e4de;
+  --accent: #1a5c4a;
+  --accent-light: #edf5f2;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  min-height: 100vh;
+  color: var(--ink);
+}
+
+nav {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--light);
+  background: var(--white);
+}
+.brand {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.2rem;
+}
+.brand i { color: var(--accent); font-style: italic; }
+.nav-tag {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--mid);
+  background: var(--bg);
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--light);
+}
+
+.page {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+.page-header { margin-bottom: 36px; }
+.eyebrow {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.page-header h1 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+.page-header h1 em { font-style: italic; color: var(--accent); }
+.page-header p {
+  font-size: 0.88rem;
+  color: var(--mid);
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+.form-block { margin-bottom: 28px; }
+.block-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--mid);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--light);
+}
+
+.field { margin-bottom: 14px; }
+.field label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.field label span { color: var(--mid); font-weight: 400; }
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+select,
+textarea {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1px solid var(--light);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.9rem;
+  color: var(--ink);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(26,92,74,0.08);
+}
+select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+textarea { resize: none; height: 80px; line-height: 1.5; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+.stepper {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--light);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--white);
+}
+.step-btn {
+  width: 44px; height: 46px;
+  border: none; background: none;
+  font-size: 1.2rem; font-weight: 300;
+  color: var(--ink); cursor: pointer;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+.step-btn:hover { background: var(--bg); }
+.stepper input {
+  flex: 1;
+  border: none;
+  border-left: 1px solid var(--light);
+  border-right: 1px solid var(--light);
+  border-radius: 0;
+  text-align: center;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 10px 4px;
+  box-shadow: none;
+  background: var(--white);
+}
+.stepper input:focus { box-shadow: none; border-color: var(--light); }
+
+.prop-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.prop-opt { position: relative; }
+.prop-opt input { position: absolute; opacity: 0; width: 0; height: 0; }
+.prop-opt label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px;
+  border: 1px solid var(--light);
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--mid);
+  background: var(--white);
+  transition: all 0.2s;
+  margin: 0;
+  text-transform: none;
+  letter-spacing: 0;
+}
+.prop-opt input:checked + label {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-light);
+  font-weight: 500;
+}
+
+.upload-box {
+  position: relative;
+  border: 1.5px dashed var(--light);
+  border-radius: 10px;
+  padding: 20px 16px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--white);
+  transition: border-color 0.2s, background 0.2s;
+}
+.upload-box:hover { border-color: var(--accent); background: var(--accent-light); }
+.upload-box input {
+  position: absolute; inset: 0;
+  opacity: 0; cursor: pointer;
+  width: 100%; height: 100%;
+  border: none; background: none; padding: 0; box-shadow: none;
+}
+.upload-box input:focus { box-shadow: none; }
+.upload-icon { font-size: 1.4rem; margin-bottom: 5px; }
+.upload-hint { font-size: 0.8rem; color: var(--mid); font-weight: 300; }
+.upload-hint b { color: var(--accent); font-weight: 500; }
+.file-badge {
+  display: none;
+  margin-top: 8px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-light);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+.error-box {
+  display: none;
+  padding: 12px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  color: #b91c1c;
+  margin-bottom: 16px;
+}
+.error-box.show { display: block; }
+
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--accent);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+.submit-btn:hover { opacity: 0.9; }
+.submit-btn:active { transform: scale(0.99); }
+.submit-sub {
+  text-align: center;
+  font-size: 0.72rem;
+  color: var(--mid);
+  margin-top: 10px;
+}
+
+/* RESULT */
+.result-top {
+  background: var(--accent);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+.check-circle {
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 1.4rem;
+  animation: pop 0.4s cubic-bezier(0.175,0.885,0.32,1.275) 0.2s both;
+}
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+.result-greeting { font-size: 0.78rem; color: rgba(255,255,255,0.55); font-weight: 300; margin-bottom: 2px; }
+.result-customer {
+  font-family: 'Instrument Serif', serif;
+  font-size: 1.3rem; color: var(--white); margin-bottom: 20px;
+}
+.price-label {
+  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 6px;
+}
+.price-number {
+  font-family: 'Instrument Serif', serif;
+  font-size: 3rem; color: var(--white); line-height: 1; margin-bottom: 6px;
+}
+.price-note { font-size: 0.75rem; color: rgba(255,255,255,0.45); font-weight: 300; }
+
+.r-card {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
+  border: 1px solid var(--light);
+}
+.card-title {
+  font-size: 0.68rem; font-weight: 500; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--mid); margin-bottom: 14px;
+}
+.b-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.88rem; padding: 9px 0;
+  border-bottom: 1px solid var(--bg);
+}
+.b-row:last-child { border-bottom: none; }
+.b-row.total {
+  border-top: 1.5px solid var(--ink); border-bottom: none;
+  margin-top: 6px; padding-top: 13px; font-weight: 500;
+}
+.b-row.total .bv { color: var(--accent); font-size: 1rem; font-weight: 600; }
+
+.step-row { display: flex; gap: 14px; margin-bottom: 14px; align-items: flex-start; }
+.step-row:last-child { margin-bottom: 0; }
+.s-dot {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 600; flex-shrink: 0;
+}
+.s-dot.done { background: var(--accent-light); color: var(--accent); }
+.s-dot.now { background: var(--accent); color: white; }
+.s-dot.next { background: var(--bg); color: var(--mid); }
+.s-text h4 { font-size: 0.85rem; font-weight: 500; margin-bottom: 2px; }
+.s-text p { font-size: 0.76rem; color: var(--mid); line-height: 1.4; font-weight: 300; }
+
+.cta-stack { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+.cta-a {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 14px; border-radius: 10px;
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 500;
+  text-decoration: none; transition: opacity 0.2s; border: none; cursor: pointer;
+}
+.cta-a:hover { opacity: 0.88; }
+.cta-green { background: var(--accent); color: white; }
+.cta-dark { background: var(--ink); color: white; }
+.cta-foot { text-align: center; font-size: 0.72rem; color: var(--mid); line-height: 1.6; }
+
+#loader {
+  display: none; position: fixed; inset: 0;
+  background: rgba(249,247,244,0.92); z-index: 99;
+  flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+}
+#loader.on { display: flex; }
+.spin {
+  width: 36px; height: 36px;
+  border: 2px solid var(--light); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.load-text { font-size: 0.82rem; color: var(--mid); font-weight: 300; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in { animation: fadeUp 0.5s ease both; }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="spin"></div>
+  <div class="load-text">Calculating your estimate…</div>
+</div>
+
+<nav>
+  <div class="brand">Clear<i>View</i></div>
+  <div class="nav-tag">Free Estimate</div>
+</nav>
+
+<!-- FORM PAGE -->
+<div class="page" id="form-page">
+  <div class="page-header">
+    <div class="eyebrow">Instant Quote Tool</div>
+    <h1>Your estimate,<br><em>in under 3 minutes.</em></h1>
+    <p>Upload photos, answer a few questions, and see your installation price right away — no calls, no waiting.</p>
+  </div>
+
+  <form id="qform" novalidate>
+
+    <div class="form-block">
+      <div class="block-label">Your details</div>
+      <div class="two-col">
+        <div class="field">
+          <label>Full name</label>
+          <input type="text" id="name" placeholder="John Anderson">
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input type="tel" id="phone" placeholder="+1 555 000 0000">
+        </div>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" placeholder="john@email.com">
+      </div>
+      <div class="field">
+        <label>City & State</label>
+        <input type="text" id="location" placeholder="e.g. Austin, TX">
+      </div>
+    </div>
+
+    <div class="form-block">
+      <div class="block-label">Photos</div>
+      <div class="field">
+        <label>Interior photos</label>
+        <div class="upload-box">
+          <input type="file" id="int-photos" accept="image/*" multiple>
+          <div class="upload-icon">🏠</div>
+          <div class="upload-hint"><b>Tap to upload</b> · interior views</div>
+          <div class="file-badge" id="int-badge"></div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Exterior photos</label>
+        <div class="upload-box">
+          <input type="file" id="ext-photos" accept="image/*" multiple>
+          <div class="upload-icon">🏡</div>
+          <div class="upload-hint"><b>Tap to upload</b> · outside views</div>
+          <div class="file-badge" id="ext-badge"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <div class="block-label">Windows & doors</div>
+      <div class="field">
+        <label>Standard windows <span>(up to 36"×60")</span></label>
+        <div class="stepper">
+          <button type="button" class="step-btn" onclick="adj('sw',-1)">−</button>
+          <input type="number" id="sw" value="0" min="0" readonly>
+          <button type="button" class="step-btn" onclick="adj('sw',1)">+</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Large windows <span>(over 36"×60")</span></label>
+        <div class="stepper">
+          <button type="button" class="step-btn" onclick="adj('lw',-1)">−</button>
+          <input type="number" id="lw" value="0" min="0" readonly>
+          <button type="button" class="step-btn" onclick="adj('lw',1)">+</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Doors</label>
+        <div class="stepper">
+          <button type="button" class="step-btn" onclick="adj('dr',-1)">−</button>
+          <input type="number" id="dr" value="0" min="0" readonly>
+          <button type="button" class="step-btn" onclick="adj('dr',1)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <div class="block-label">Preferences</div>
+      <div class="field">
+        <label>Trim preference</label>
+        <select id="trim">
+          <option value="">Select...</option>
+          <option value="standard">Standard — no extra cost</option>
+          <option value="premium">Premium — +$50 per unit</option>
+          <option value="custom">Custom — +$100 per unit</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Property type</label>
+        <div class="prop-row">
+          <div class="prop-opt">
+            <input type="radio" name="prop" id="res" value="residential">
+            <label for="res">🏠 Residential</label>
+          </div>
+          <div class="prop-opt">
+            <input type="radio" name="prop" id="com" value="commercial">
+            <label for="com">🏢 Commercial</label>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>Special notes <span>(optional)</span></label>
+        <textarea id="notes" placeholder="Unusual frame shape, accessibility needs, etc."></textarea>
+      </div>
+    </div>
+
+    <div class="error-box" id="err">Please complete all required fields and upload at least one photo per section.</div>
+    <button type="submit" class="submit-btn">Calculate my estimate →</button>
+    <p class="submit-sub">🔒 Your info is secure. No spam.</p>
+
+  </form>
+</div>
+
+<!-- RESULT PAGE -->
+<div class="page fade-in" id="result-page" style="display:none; padding-top:32px;">
+
+  <div class="result-top">
+    <div class="check-circle">✓</div>
+    <div class="result-greeting">Your estimate is ready,</div>
+    <div class="result-customer" id="r-name">—</div>
+    <div class="price-label">Estimated Installation Cost</div>
+    <div class="price-number" id="r-price">$0</div>
+    <div class="price-note">Final price confirmed after on-site measurement</div>
+  </div>
+
+  <div class="r-card">
+    <div class="card-title">Breakdown</div>
+    <div id="r-breakdown"></div>
+  </div>
+
+  <div class="r-card">
+    <div class="card-title">What happens next</div>
+    <div class="step-row">
+      <div class="s-dot done">✓</div>
+      <div class="s-text"><h4>Details submitted</h4><p>Photos and specs received.</p></div>
+    </div>
+    <div class="step-row">
+      <div class="s-dot now">2</div>
+      <div class="s-text"><h4>Book your measurement visit</h4><p>~30 min on-site. Fee credited toward final cost.</p></div>
+    </div>
+    <div class="step-row">
+      <div class="s-dot next">3</div>
+      <div class="s-text"><h4>Get your final quote</h4><p>Locked-in price after measurement.</p></div>
+    </div>
+  </div>
+
+  <div class="cta-stack">
+    <a href="https://calendly.com/adedapor18/measurement-appointment" class="cta-a cta-green" target="_blank">📅 Book Measurement Appointment</a>
+    <a href="https://buy.stripe.com/test_eVq00l3VJ4yK90keR33F600" class="cta-a cta-dark" target="_blank">💳 Pay $50 Measurement Fee</a>
+  </div>
+  <p class="cta-foot">Measurement fee is credited toward your final installation cost.<br>Secure payment via Stripe.</p>
+
+</div>
+
+<script>
+function adj(id, d) {
+  const el = document.getElementById(id);
+  el.value = Math.max(0, (parseInt(el.value)||0) + d);
+}
+
+['int-photos','ext-photos'].forEach(function(inputId) {
+  const badgeId = inputId === 'int-photos' ? 'int-badge' : 'ext-badge';
+  document.getElementById(inputId).addEventListener('change', function() {
+    const b = document.getElementById(badgeId);
+    const n = this.files.length;
+    if (n) { b.textContent = n + ' photo' + (n>1?'s':'') + ' selected ✓'; b.style.display = 'inline-block'; }
+    else b.style.display = 'none';
+  });
+});
+
+function calc(sw, lw, dr, trim) {
+  const units = sw + lw + dr;
+  const trimAdd = trim === 'premium' ? units*50 : trim === 'custom' ? units*100 : 0;
+  const rows = [];
+  if (sw) rows.push({ l: sw + ' Standard Window' + (sw>1?'s':'') + ' × $150', v: sw*150 });
+  if (lw) rows.push({ l: lw + ' Large Window' + (lw>1?'s':'') + ' × $220', v: lw*220 });
+  if (dr) rows.push({ l: dr + ' Door' + (dr>1?'s':'') + ' × $300', v: dr*300 });
+  if (trimAdd) rows.push({ l: trim.charAt(0).toUpperCase()+trim.slice(1) + ' Trim (' + units + ' unit' + (units>1?'s':'') + ')', v: trimAdd });
+  const total = rows.reduce(function(s,r){ return s+r.v; }, 0);
+  return { total: total, rows: rows };
+}
+
+document.getElementById('qform').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const loc = document.getElementById('location').value.trim();
+  const ip = document.getElementById('int-photos').files.length;
+  const ep = document.getElementById('ext-photos').files.length;
+  const sw = parseInt(document.getElementById('sw').value)||0;
+  const lw = parseInt(document.getElementById('lw').value)||0;
+  const dr = parseInt(document.getElementById('dr').value)||0;
+  const trim = document.getElementById('trim').value;
+  const prop = document.querySelector('input[name="prop"]:checked');
+  const err = document.getElementById('err');
+
+  if (!name||!email||!phone||!loc||!ip||!ep||!trim||!prop||(sw+lw+dr===0)) {
+    err.classList.add('show');
+    err.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  err.classList.remove('show');
+
+  var result = calc(sw, lw, dr, trim);
+
+  // Send lead data to n8n
+  fetch('https://free001.app.n8n.cloud/webhook-test/f1e2146c-1c63-4fbc-881e-33e52939cb8d', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      name: name,
+      email: email,
+      phone: phone,
+      address: loc,
+      property_type: prop.value,
+      standard_windows: sw,
+      large_windows: lw,
+      doors: dr,
+      trim: trim,
+      notes: document.getElementById('notes').value.trim(),
+      estimated_price: '$' + result.total.toLocaleString(),
+      submitted_at: new Date().toISOString()
+    })
+  }).catch(function(err) { console.warn('Webhook error:', err); });
+
+  document.getElementById('loader').classList.add('on');
+
+  setTimeout(function() {
+    document.getElementById('loader').classList.remove('on');
+
+    document.getElementById('r-name').textContent = name;
+
+    document.getElementById('r-price').textContent = '$' + result.total.toLocaleString();
+
+    var bd = document.getElementById('r-breakdown');
+    bd.innerHTML = result.rows.map(function(r) {
+      return '<div class="b-row"><span>' + r.l + '</span><span class="bv">$' + r.v.toLocaleString() + '</span></div>';
+    }).join('') + '<div class="b-row total"><span>Total Estimate</span><span class="bv">$' + result.total.toLocaleString() + '</span></div>';
+
+    document.getElementById('form-page').style.display = 'none';
+    document.getElementById('result-page').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, 1600);
+});
+</script>
+</body>
+</html>
